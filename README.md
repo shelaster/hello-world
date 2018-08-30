@@ -1,2 +1,2 @@
 # hello-world
-Randon, uselless trash
+Random, uselless trash
