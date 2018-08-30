@@ -9,6 +9,7 @@ data = json.loads(url)
 station_ids = []
 station_names = []
 sensor_ids = []
+
 # get all station IDs in given city
 print("Stacje znalezionie w mieście " + sys.argv[1])
 for d in data:
@@ -19,6 +20,7 @@ for d in data:
 station_ids = list(map(str, station_ids))
 
 for s in range(len(station_ids)):
+    # Get quality index for given station
     url = (
         "http://api.gios.gov.pl/pjp-api/rest/aqindex/getIndex/",
         station_ids[s])
@@ -27,6 +29,7 @@ for s in range(len(station_ids)):
     print(
         "\n\t" + station_names[s] + " -- Indeks jakości powietrza: " +
         qualIndex['stIndexLevel']['indexLevelName'])
+    # Find all sensors in a station
     url = (
         "http://api.gios.gov.pl/pjp-api/rest/station/sensors/", station_ids[s])
     url = "".join(url)
@@ -34,12 +37,14 @@ for s in range(len(station_ids)):
     for d in range(len(sensor_list)):
         sensor_ids.append(sensor_list[d]['id'])
     sensor_ids = list(map(str, sensor_ids))
+    # Get readings from sensors
     for x in range(len(sensor_ids)):
         i = 0
         url = (
             "http://api.gios.gov.pl/pjp-api/rest/data/getData/", sensor_ids[x])
         url = "".join(url)
         data = json.loads(urllib.request.urlopen(url).read())
+    # Calculate percentage change from last sucessful reading
         while data['values'][i]['value'] is None:
             i += 1
         j = i + 1
@@ -48,6 +53,7 @@ for s in range(len(station_ids)):
         percentage = (
             data['values'][i]['value'] - data['values'][j]['value'])/(
                 abs(data['values'][j]['value'])/100)
+    # Print out results
         print(
             data['key'] + ": " + str(
                 data['values'][i]['value']) + " poprzedni odczyt: " + str(
