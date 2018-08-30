@@ -1,8 +1,8 @@
 import sys
 import urllib.request, urllib.error, urllib.parse
 import json
-url=urllib.request.urlopen("http://api.gios.gov.pl/pjp-api/rest/station/findAll").read()
-data=json.loads(url)
+url = urllib.request.urlopen("http://api.gios.gov.pl/pjp-api/rest/station/findAll").read()
+data = json.loads(url)
 station_ids = []
 station_names = []
 sensor_ids = []
@@ -19,13 +19,13 @@ station_ids = list(map(str, station_ids))
 
 
 for s in range(len(station_ids)):
-    url = ("http://api.gios.gov.pl/pjp-api/rest/aqindex/getIndex/",station_ids[s])
+    url = ("http://api.gios.gov.pl/pjp-api/rest/aqindex/getIndex/", station_ids[s])
     url = "".join(url)
     qualIndex=json.loads(urllib.request.urlopen(url).read())
     
     print("\n\t" + station_names[s] + " -- Indeks jakości powietrza: " + qualIndex['stIndexLevel']['indexLevelName'])
 
-    url = ("http://api.gios.gov.pl/pjp-api/rest/station/sensors/",station_ids[s])
+    url = ("http://api.gios.gov.pl/pjp-api/rest/station/sensors/", station_ids[s])
     url = "".join(url)
     sensor_list=json.loads(urllib.request.urlopen(url).read())
     for d in range(len(sensor_list)):
@@ -33,7 +33,7 @@ for s in range(len(station_ids)):
     sensor_ids = list(map(str, sensor_ids))
     for x in range(len(sensor_ids)):
         i = 0
-        url = ("http://api.gios.gov.pl/pjp-api/rest/data/getData/",sensor_ids[x])
+        url = ("http://api.gios.gov.pl/pjp-api/rest/data/getData/", sensor_ids[x])
         url = "".join(url)
         data=json.loads(urllib.request.urlopen(url).read())
         while data['values'][i]['value'] == None:
